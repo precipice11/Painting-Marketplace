@@ -3,18 +3,18 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    
     {% for item in listings %}
-        <h3>{{item.title}}</h3>
+        <h3><a href="{% url 'listing_detail' item.id %}">{{ item.title }}</a></h3>
         <ul>
             <li>Description: {{ item.description }}</li>
             <li>Current Price: ${{ item.starting_bid }}</li>
-            {% if not item.image %}
-                <div>Image not available</div>
+
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="Image for {{ item.title }}">
             {% else %}
-                <li>{{ item.image }}</li>
+                <div>Image not available</div>
             {% endif %}
         </ul>
     {% endfor %}
-    
+
 {% endblock %}
