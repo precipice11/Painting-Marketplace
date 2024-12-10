@@ -15,6 +15,7 @@ class Auction_Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.TextField()
     starting_bid = models.IntegerField()
+    current_price = models.IntegerField(null=True, blank=True)  # Track the current bid
     image = models.ImageField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="listings")
 

@@ -6,8 +6,9 @@
     {% for item in listings %}
         <h3><a href="{% url 'listing_detail' item.id %}">{{ item.title }}</a></h3>
         <ul>
-            <li>Description: {{ item.description }}</li>
-            <li>Current Price: ${{ item.starting_bid }}</li>
+            <li><b>Price:</b> ${{ item.current_price|default:item.starting_bid }}</li>
+            <li>{{ item.description }}</li>
+
 
             {% if item.image %}
                 <img src="{{ item.image.url }}" alt="Image for {{ item.title }}">

@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
+
 
 from .models import User, Category, Auction_Listing, Bid, Comment
 from .forms import createListing
@@ -129,3 +131,35 @@ def category_page(request, category):
         "category": selected_category,
         "listings": listings
     })
+
+
+
+def bidding(request, user_id):
+    if request.method == "POST":
+        user = User.objects.get(pk=user_id)
+        listing_id = request.POST.get("listing_id")
+        bid_amount = int(request.POST.get("bid", 0))
+
+        # Fetch the listing
+        listing = Auction_Listing.objects.get(pk=listing_id)
+
+        # Validate the bid
+        highest_bid = listing.bids.order_by("-bid_amount").first()
+        if bid_amount < listing.starting_bid:
+            messages.error(request, "Your bid must be at least as large as the starting bid.")
+        elif highest_bid and bid_amount <= highest_bid.bid_amount:
+            messages.error(request, "Your bid must be greater than the current highest bid.")
+        else:
+            # Create a new bid
+            Bid.objects.create(
+                user=user,
+                listing=listing,
+                bid_amount=bid_amount
+            )
+            # Update the listing's current price
+            listing.current_price = bid_amount
+            listing.save()
+
+            messages.success(request, "Your bid was placed successfully!")
+
+        return redirect("listing_detail", listing_id=listing_id)

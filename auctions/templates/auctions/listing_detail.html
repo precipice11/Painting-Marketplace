@@ -16,10 +16,26 @@
         <div>Image not available</div>
     {% endif %}
 
-    {% if user.is_authenticated %}
-    {% endif %}
     <p>{{ listing.description }}</p>
-    <h2>${{ listing.starting_bid }}</h2>
+    <h2>${{ listing.current_price|default:listing.starting_bid }}</h2>
+
+
+    {% if user.is_authenticated %}
+        <form action="{% url 'bidding' user.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <input type="number" name="bid" placeholder="Bid" required>
+            <input type="submit" value="Place Bid">
+        </form>
+        {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    {% endif %}
     
     
 {% endblock %}
