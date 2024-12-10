@@ -115,3 +115,17 @@ def user_watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist": request.user.watchlist.all(),
     })
+
+
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories":Category.objects.all()
+    })
+
+def category_page(request, category):
+    selected_category = get_object_or_404(Category, name=category)
+    listings = Auction_Listing.objects.filter(category=selected_category)
+    return render(request, "auctions/category_page.html", {
+        "category": selected_category,
+        "listings": listings
+    })
