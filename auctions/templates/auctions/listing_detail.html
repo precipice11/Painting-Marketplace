@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listing: {{ listing.title }}</h2>
+    <div> <a href="{% url 'watchlist' listing.id %}">
+        {% if listing in user.watchlist.all %}
+            Remove from Watchlist
+        {% else %}
+            Add to Watchlist
+        {% endif %}
+    </a></div>
+   
+    {% if listing.image %}
+    <img src="{{ listing.image.url }}" alt="Image for {{ listing.title }}">
+    {% else %}
+        <div>Image not available</div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    {% endif %}
+    <p>{{ listing.description }}</p>
+    <h2>${{ listing.starting_bid }}</h2>
+    
+    
+{% endblock %}

@@ -7,6 +7,10 @@ from django.urls import reverse
 from .models import User, Category, Auction_Listing, Bid, Comment
 from .forms import createListing
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+
+
 def index(request):
     return render(request, "auctions/index.html", {
         "listings": Auction_Listing.objects.all(),
@@ -93,3 +97,21 @@ def listing_detail(request, listing_id):
         "listing": listing,
     })
 
+
+@login_required
+def watchlist(request, listing_id):
+    listing = get_object_or_404(Auction_Listing, pk=listing_id)
+    if listing in request.user.watchlist.all():
+        # Remove from watchlist if already there
+        request.user.watchlist.remove(listing)
+    else:
+        # Add to watchlist if not already there
+        request.user.watchlist.add(listing)
+
+    return HttpResponseRedirect(reverse('listing_detail', args=[listing_id]))
+
+@login_required
+def user_watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": request.user.watchlist.all(),
+    })
