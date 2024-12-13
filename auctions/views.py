@@ -163,3 +163,19 @@ def bidding(request, user_id):
             messages.success(request, "Your bid was placed successfully!")
 
         return redirect("listing_detail", listing_id=listing_id)
+
+def comment(request, user_id):
+    if request.method == "POST":
+        user = get_object_or_404(User, pk=user_id)
+        listing_id = request.POST.get("listing_id")
+        listing = get_object_or_404(Auction_Listing, pk=listing_id)
+
+        # Create a new comment
+        Comment.objects.create(
+            user=user,
+            listing=listing,
+            text=request.POST.get("comment")
+        )
+
+        # Redirect back to the listing page
+        return redirect("listing_detail", listing_id=listing_id)

@@ -33,9 +33,33 @@
             <li class="{{ message.tags }}">{{ message }}</li>
         {% endfor %}
     </ul>
-{% endif %}
+    {% endif %}
 
     {% endif %}
+
+    {% if user.is_authenticated %}
+        <h3>Comments</h3>
+        {% if listing.comments.exists %}
+            <ul>
+                {% for comment in listing.comments.all %}
+                    <li><strong>{{ comment.user.username }}</strong>: {{ comment.text }} [{{comment.created_at}}]</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No comments yet.</p>
+        {% endif %}
+
+        <form action="{% url 'comment' user.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+            <input type="text" name="comment" placeholder="Comment...">
+            <input type="submit" value="Publish">
+        </form>
+        
+    {% else %}
+            Sign in to view Comments.
+    {% endif %}
+
     
     
 {% endblock %}
