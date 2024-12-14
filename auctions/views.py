@@ -209,8 +209,8 @@ def close_auction(request, listing_id):
 
 @login_required
 def owned(request):
-    user = request.user
-    listings = Auction_Listing.objects.filter(owner=user)
+    # Fetch all active auction listings created by the logged-in user
+    owned_listings = Auction_Listing.objects.filter(owner=request.user)
     return render(request, "auctions/owned.html", {
-        "listings": listings
-        })
+        "owned_listings": owned_listings
+    })
