@@ -13,6 +13,8 @@ class Category(models.Model):
 
 class Auction_Listing(models.Model):
     title = models.CharField(max_length=64)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
+    is_active = models.BooleanField(default=True)
     description = models.TextField()
     starting_bid = models.IntegerField()
     current_price = models.IntegerField(null=True, blank=True)  # Track the current bid

@@ -2,14 +2,16 @@
 
 {% block body %}
     <h2>Listing: {{ listing.title }}</h2>
-    <div> <a href="{% url 'watchlist' listing.id %}">
+    <div> 
+        <a href="{% url 'watchlist' listing.id %}">
         {% if listing in user.watchlist.all %}
             Remove from Watchlist
         {% else %}
             Add to Watchlist
         {% endif %}
-    </a></div>
-   
+        </a>
+    </div>
+
     {% if listing.image %}
     <img src="{{ listing.image.url }}" alt="Image for {{ listing.title }}">
     {% else %}
@@ -19,22 +21,32 @@
     <p>{{ listing.description }}</p>
     <h2>${{ listing.current_price|default:listing.starting_bid }}</h2>
 
-
     {% if user.is_authenticated %}
+        {% if listing.is_active and request.user == listing.owner %}
+            <form action="{% url 'close_auction' listing.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Close Auction</button>
+            </form>
+        {% endif %}
+
         <form action="{% url 'bidding' user.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="listing_id" value="{{ listing.id }}">
             <input type="number" name="bid" placeholder="Bid" required>
             <input type="submit" value="Place Bid">
         </form>
-        {% if messages %}
-    <ul>
-        {% for message in messages %}
-            <li class="{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
 
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        {% if not listing.is_active and has_won %}
+            <h1>Congratulations! You have won this auction.</h1>
+        {% endif %}
     {% endif %}
 
     {% if user.is_authenticated %}
@@ -57,9 +69,7 @@
         </form>
         
     {% else %}
-            Sign in to view Comments.
+        Sign in to view Comments.
     {% endif %}
 
-    
-    
 {% endblock %}

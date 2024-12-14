@@ -4,18 +4,19 @@
     <h2>Active Listings</h2>
 
     {% for item in listings %}
-        <h3><a href="{% url 'listing_detail' item.id %}">{{ item.title }}</a></h3>
-        <ul>
-            <li><b>Price:</b> ${{ item.current_price|default:item.starting_bid }}</li>
-            <li>{{ item.description }}</li>
+        {% if item.is_active %}
+            <h3><a href="{% url 'listing_detail' item.id %}">{{ item.title }}</a></h3>
+            <ul>
+                <li><b>Price:</b> ${{ item.current_price|default:item.starting_bid }}</li>
+                <li>{{ item.description }}</li>
 
-
-            {% if item.image %}
-                <img src="{{ item.image.url }}" alt="Image for {{ item.title }}">
-            {% else %}
-                <div>Image not available</div>
-            {% endif %}
-        </ul>
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="Image for {{ item.title }}">
+                {% else %}
+                    <div>Image not available</div>
+                {% endif %}
+            </ul>
+        {% endif %}
     {% endfor %}
 
 {% endblock %}

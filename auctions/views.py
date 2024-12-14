@@ -72,6 +72,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+@login_required
 def create(request):        
     if request.method == "POST":
         form = createListing(request.POST, request.FILES)
@@ -82,7 +83,8 @@ def create(request):
                 description=form.cleaned_data["description"],
                 starting_bid=form.cleaned_data["starting_bid"],
                 image=form.cleaned_data["image"],
-                category=form.cleaned_data["category"]
+                category=form.cleaned_data["category"],
+                owner = request.user,
             )
             listing.save()
             return HttpResponseRedirect(reverse("index"))
@@ -94,9 +96,19 @@ def create(request):
     })
 
 def listing_detail(request, listing_id):
-    listing = Auction_Listing.objects.get(pk=listing_id)
+    listing = get_object_or_404(Auction_Listing, id=listing_id)
+    is_creator = request.user == listing.owner  # Check if current user created the listing
+    has_won = False  # Initialize has_won outside of the if block
+    
+    if not listing.is_active:
+        highest_bid = listing.bids.order_by('-bid_amount').first()
+        if highest_bid and highest_bid.user == request.user:
+            has_won = True
+    
     return render(request, "auctions/listing_detail.html", {
         "listing": listing,
+        "is_creator": is_creator,
+        "has_won": has_won,
     })
 
 
@@ -133,10 +145,10 @@ def category_page(request, category):
     })
 
 
-
+@login_required
 def bidding(request, user_id):
     if request.method == "POST":
-        user = User.objects.get(pk=user_id)
+        user = request.user
         listing_id = request.POST.get("listing_id")
         bid_amount = int(request.POST.get("bid", 0))
 
@@ -162,11 +174,13 @@ def bidding(request, user_id):
 
             messages.success(request, "Your bid was placed successfully!")
 
+
         return redirect("listing_detail", listing_id=listing_id)
 
+@login_required
 def comment(request, user_id):
     if request.method == "POST":
-        user = get_object_or_404(User, pk=user_id)
+        user = request.user
         listing_id = request.POST.get("listing_id")
         listing = get_object_or_404(Auction_Listing, pk=listing_id)
 
@@ -179,3 +193,15 @@ def comment(request, user_id):
 
         # Redirect back to the listing page
         return redirect("listing_detail", listing_id=listing_id)
+    
+
+@login_required
+def close_auction(request, listing_id):
+    if request.method == "POST":
+        listing = Auction_Listing.objects.get(id=listing_id)
+        if request.user == listing.owner:
+            listing.is_active = False
+            listing.save()
+            return redirect("listing_detail", listing_id=listing_id)
+    else:
+        return HttpResponse(status=405)  # Method Not Allowed
