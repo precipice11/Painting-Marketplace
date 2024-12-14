@@ -178,7 +178,7 @@ def bidding(request, user_id):
         return redirect("listing_detail", listing_id=listing_id)
 
 @login_required
-def comment(request, user_id):
+def comment(request):
     if request.method == "POST":
         user = request.user
         listing_id = request.POST.get("listing_id")
@@ -205,3 +205,12 @@ def close_auction(request, listing_id):
             return redirect("listing_detail", listing_id=listing_id)
     else:
         return HttpResponse(status=405)  # Method Not Allowed
+
+
+@login_required
+def owned(request):
+    user = request.user
+    listings = Auction_Listing.objects.filter(owner=user)
+    return render(request, "auctions/owned.html", {
+        "listings": listings
+        })

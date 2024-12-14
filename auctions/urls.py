@@ -16,6 +16,7 @@ urlpatterns = [
     path("categories/", views.categories, name="categories"),
     path("categories/<str:category>", views.category_page, name="category"),
     path("bidding/<int:user_id>/", views.bidding, name="bidding"),
-    path("comment/<int:user_id>/", views.comment, name="comment"),
+    path("comment", views.comment, name="comment"),
     path("close_auction/<int:listing_id>/", views.close_auction, name="close_auction"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("owned/", views.owned, name="owned"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
