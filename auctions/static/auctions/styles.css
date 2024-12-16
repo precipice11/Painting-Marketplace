@@ -7,10 +7,13 @@ body {
 .active-listing-cont {
     display: flex;
     flex-direction: row;
+    align-items: center; /* Vertically align items */
     border: 1px solid #ccc; /* Thin border with a light gray color */
     padding: 10px; /* Optional: Add padding inside the border */
     border-radius: 5px; /* Optional: Rounded corners */
     margin-bottom: 15px; /* Optional: Space between listings */
+    width: 100%; /* Ensure container takes up full width */
+    box-sizing: border-box; /* Includes padding in the width calculation */
 }
 
 .active-listing-img img {
@@ -18,15 +21,15 @@ body {
     max-height: 250px; /* Limit the height */
     width: auto; /* Maintain aspect ratio */
     height: auto; /* Maintain aspect ratio */
-    display: block; 
+    display: block;
     object-fit: contain;
 }
-
 
 .active-listing-info {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    flex: 1; /* Ensures the info section takes available space */
 }
 
 .comment {
@@ -39,4 +42,42 @@ body {
     margin-bottom: 20px; /* Adds space below each list item */
     padding: 15px; /* Optional: Adds space inside each item */
     border-radius: 5px; /* Optional: Adds rounded corners to the border */
+}
+
+#heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Ensure proper vertical alignment of elements */
+    justify-content: space-between; /* Space between elements */
+    width: 100%;
+}
+
+#title {
+    color: black;
+}
+
+.category-item {
+    padding: 20px;
+    color: black;
+    background-color: #CDCDCD;
+    border-radius: 5px;
+    width: 200px;
+    border: 1px solid #D3D3D3;
+    text-decoration: none;
+    display: flex;          /* Makes the link a flex container */
+    align-items: center;    /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+    text-align: center;      /* Ensures text is centered */
+    margin: 10px;            /* Adds space between each item */
+}
+
+.category-item:hover {
+    background-color: #D3D3D3;
+}
+
+.category_parent {
+    display: flex;
+    flex-wrap: wrap;         /* Ensures items wrap to next line when needed */
+    justify-content: flex-start; /* Aligns items to the left */
+    gap: 10px;               /* Adds space between items */
 }

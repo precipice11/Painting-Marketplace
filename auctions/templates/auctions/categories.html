@@ -4,6 +4,8 @@
     <h2>Categories</h2>
     
     {% for item in categories %}
-        <div><a href="{% url 'category' item.name %}">{{ item.name }}</a></div>
+        <div class="category_parent">
+            <a class="category-item" href="{% url 'category' item.name %}">{{ item.name }}</a>
+        </div>
     {% endfor %}
 {% endblock %}
