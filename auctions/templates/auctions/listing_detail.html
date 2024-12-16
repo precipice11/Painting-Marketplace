@@ -2,6 +2,7 @@
 
 {% block body %}
     <h2>Listing: {{ listing.title }}</h2>
+    {% if user.is_authenticated %}
     <div> 
         <a href="{% url 'watchlist' listing.id %}">
         {% if listing in user.watchlist.all %}
@@ -11,6 +12,7 @@
         {% endif %}
         </a>
     </div>
+    {% endif %}
 
     {% if listing.image %}
     <img src="{{ listing.image.url }}" alt="Image for {{ listing.title }}">
@@ -33,7 +35,7 @@
             {% csrf_token %}
             <input type="hidden" name="listing_id" value="{{ listing.id }}">
             <input type="number" name="bid" placeholder="Bid" required>
-            <input type="submit" value="Place Bid">
+            <input type="submit" value="Place Bid" class="btn btn-primary">
         </form>
 
         {% if messages %}
@@ -48,9 +50,18 @@
             <h1>Congratulations! You have won this auction.</h1>
         {% endif %}
     {% endif %}
+    <div class="active-listing-cont">
+        {% if user.is_authenticated %}
+        <div class="comment">
+            <h3>Comments</h3>
+            <form action="{% url 'comment' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                <input type="text" name="comment" placeholder="Comment...">
+                <input type="submit" value="Publish" class="btn btn-primary">
+            </form>
+        </div>
 
-    {% if user.is_authenticated %}
-        <h3>Comments</h3>
         {% if listing.comments.exists %}
             <ul>
                 {% for comment in listing.comments.all %}
@@ -60,16 +71,11 @@
         {% else %}
             <p>No comments yet.</p>
         {% endif %}
-
-        <form action="{% url 'comment' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="listing_id" value="{{ listing.id }}">
-            <input type="text" name="comment" placeholder="Comment...">
-            <input type="submit" value="Publish">
-        </form>
         
     {% else %}
         Sign in to view Comments.
     {% endif %}
+    </div>
+
 
 {% endblock %}

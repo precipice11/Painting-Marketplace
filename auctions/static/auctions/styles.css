@@ -1,4 +1,42 @@
 body {
-    color: red;
+    color: black;
     padding: 20px;
+    margin: 20px;
+}
+
+.active-listing-cont {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc; /* Thin border with a light gray color */
+    padding: 10px; /* Optional: Add padding inside the border */
+    border-radius: 5px; /* Optional: Rounded corners */
+    margin-bottom: 15px; /* Optional: Space between listings */
+}
+
+.active-listing-img img {
+    max-width: 250px; /* Limit the width */
+    max-height: 250px; /* Limit the height */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+    display: block; 
+    object-fit: contain;
+}
+
+
+.active-listing-info {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.list-group-item {
+    margin-bottom: 20px; /* Adds space below each list item */
+    padding: 15px; /* Optional: Adds space inside each item */
+    border-radius: 5px; /* Optional: Adds rounded corners to the border */
 }

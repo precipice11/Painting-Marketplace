@@ -5,17 +5,20 @@
 
     {% for item in listings %}
         {% if item.is_active %}
-            <h3><a href="{% url 'listing_detail' item.id %}">{{ item.title }}</a></h3>
-            <ul>
-                <li><b>Price:</b> ${{ item.current_price|default:item.starting_bid }}</li>
-                <li>{{ item.description }}</li>
-
+        <div class="active-listing-cont">
+            <div class="active-listing-img">
                 {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="Image for {{ item.title }}">
+                <img src="{{ item.image.url }}" alt="Image for {{ item.title }}">
                 {% else %}
                     <div>Image not available</div>
                 {% endif %}
-            </ul>
+            </div>
+            <div class="active-listing-info">
+                <h3><a href="{% url 'listing_detail' item.id %}">{{ item.title }}</a></h3>
+                <div><b>Price:</b> ${{ item.current_price|default:item.starting_bid }}</div>
+                <div>{{ item.description }}</div>
+            </div>
+        </div>
         {% endif %}
     {% endfor %}
 
