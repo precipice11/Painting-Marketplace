@@ -19,4 +19,4 @@ urlpatterns = [
     path("comment", views.comment, name="comment"),
     path("close_auction/<int:listing_id>/", views.close_auction, name="close_auction"),
     path("owned/", views.owned, name="owned"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

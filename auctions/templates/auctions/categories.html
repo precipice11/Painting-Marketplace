@@ -1,11 +1,23 @@
 {% extends "auctions/layout.html" %}
+{% load static %}  
 
 {% block body %}
-    <h2>Categories</h2>
-    
-    {% for item in categories %}
-        <div class="category_parent">
-            <a class="category-item" href="{% url 'category' item.name %}">{{ item.name }}</a>
+
+    <div class="category-page-title">Categories</div>
+    <div class="cat">
+        {% for item in categories %}
+        <div class="cat-parent">
+            <div class="cat-title">
+                <a href="{% url 'category' item.name %}">{{ item.name }}</a>
+            </div>
+            <div class="cat-img">
+                <img src="{% static 'images/'|add:item.name|add:'.jpg' %}" alt="{{ item.name }} image">
+            </div>
         </div>
     {% endfor %}
+    </div>
+
 {% endblock %}
+
+
+
